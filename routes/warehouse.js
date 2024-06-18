@@ -1,8 +1,8 @@
 import express from "express";
-import * as userController from "../controllers/warehouse-controller.js";
+import * as warehouseController from "../controllers/warehouse-controller.js";
 
 const router = express.Router();
 
-router.route("/").get(userController.warehouselist);
+router.route("/").get(warehouseController.warehouselist);
 
 export default router;
