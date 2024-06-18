@@ -2,7 +2,7 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
-const warehouselist = async (_req, res) => {
+const warehouseList = async (_req, res) => {
     try{
         const data= await knex("warehouses")
         res.status(200).json(data)
@@ -11,4 +11,5 @@ const warehouselist = async (_req, res) => {
     }
 };
 
-export {warehouselist}
+
+export {warehouseList}
