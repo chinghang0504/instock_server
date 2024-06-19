@@ -2,6 +2,7 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
+// Get All 
 const warehouseList = async (_req, res) => {
     try{
         const data= await knex("warehouses");
@@ -11,7 +12,7 @@ const warehouseList = async (_req, res) => {
     }
 };
 
-
+// Get Single
 const warehouseSingle = async (req, res) => {
     try {
         const warehouseData = await knex("warehouses").where({ id: req.params.id }).first();
@@ -26,6 +27,12 @@ const warehouseSingle = async (req, res) => {
     }
 };
 
+// Post Single
+
+const warehouseCreate = async (req,res) => {
+
+}
+
 
  
-export {warehouseList, warehouseSingle}
+export {warehouseList, warehouseSingle,warehouseCreate}
