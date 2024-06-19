@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import 'dotenv/config';
-import testRouter from './routes/test.js';
 import warehouseRouter from './routes/warehouse.js'
 import inventoryRouter  from "./routes/inventory.js";
 
@@ -14,7 +13,6 @@ app.use(cors());
 app.use(express.json());
 
 // Routers
-app.use('/test', testRouter);
 app.use('/warehouse', warehouseRouter);
 app.use('/inventory', inventoryRouter);
 
