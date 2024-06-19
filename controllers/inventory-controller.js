@@ -2,7 +2,7 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
-
+// GET All
 const inventoryList = async (_req, res) => {
     try {
         const data = await knex("inventories")
@@ -24,7 +24,7 @@ const inventoryList = async (_req, res) => {
     }
 };
 
-
+// GET Single
 const inventorySingle = async (req, res) => {
     try {
         const inventoryData = await knex("inventories")
@@ -52,5 +52,15 @@ const inventorySingle = async (req, res) => {
     }
 };
 
+const inventoryCreate = async (req,res) => {
 
-export {inventoryList,inventorySingle}
+}
+const inventoryEdit = async (req,res) => {
+    
+}
+const inventoryDelete = async (req,res) => {
+    
+}
+
+
+export {inventoryList,inventorySingle,inventoryCreate,inventoryEdit,inventoryDelete}
