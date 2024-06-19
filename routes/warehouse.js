@@ -8,6 +8,7 @@ router.route("/")
 .post(warehouseController.warehouseCreate)
 .put(warehouseController.warehouseEdit);
 
-router.route("/:id").get(warehouseController.warehouseSingle);
+router.route("/:id").get(warehouseController.warehouseSingle)
+.delete(warehouseController.warehouseDelete);
 
 export default router;
