@@ -97,10 +97,48 @@ const inventoryCreate = async (req, res) => {
     }
 };
 
+// EDIT inventory Item
+const inventoryEdit = async (req, res) => {
+    const inventoryId = req.params.id;
+    const { warehouse_id, item_name, description, category, status, quantity } = req.body;
 
-const inventoryEdit = async (req,res) => {
-    
-}
+    const existingInventory = await knex('inventories').where({ id: inventoryId }).first();
+    if (!existingInventory) {
+        return res.status(404).json({ message: `Inventory with ID ${inventoryId} not found` });
+    }
+
+    if (
+        !isValidNumber(warehouse_id) ||
+        !isNonEmptyString(item_name) ||
+        !isNonEmptyString(description) ||
+        !isNonEmptyString(category) ||
+        !isNonEmptyString(status) ||
+        !isValidNumber(quantity)
+    ) {
+        return res.status(400).json({ message: 'Invalid input. All fields are required and must be correctly formatted.' });
+    }
+
+    try {
+        const warehouse = await knex('warehouses').where({ id: warehouse_id }).first();
+        if (!warehouse) {
+            return res.status(400).json({ message: 'Invalid warehouse_id. Warehouse does not exist.' });
+        }
+
+        await knex('inventories').where({ id: inventoryId }).update({
+            warehouse_id,
+            item_name,
+            description,
+            category,
+            status,
+            quantity
+        });
+
+        const updatedInventory = await knex('inventories').where({ id: inventoryId }).first();
+        res.status(200).json(updatedInventory);
+    } catch (error) {
+        res.status(500).json({ message: `Unable to update inventory item: ${error.message}` });
+    }
+};
 const inventoryDelete = async (req,res) => {
     
 }
