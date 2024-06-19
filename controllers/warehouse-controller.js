@@ -42,7 +42,6 @@ const warehouseSingle = async (req, res) => {
     }
 };
 
-
 // EDIT Warehouse
 const warehouseEdit = async (req, res) => {
     const warehouseId = req.params.id;
@@ -134,5 +133,21 @@ const warehouseDelete = async (req, res) => {
     }
 };
 
+// GET Inventory By Warehouse
+const inventoryByWarehouse = async (req, res) =>{
+    const warehouseId = req.params.id;
+
+    try {
+        const warehouseExists = await knex('warehouses').where({ id: warehouseId }).first();
+        if (!warehouseExists) {
+            return res.status(404).json({ message: `Warehouse with ID ${warehouseId} not found` });
+        }
+
+        const inventories = await knex('inventories').where({ warehouse_id: warehouseId }).select('id', 'item_name', 'category', 'status', 'quantity');
+        res.status(200).json(inventories);
+    } catch (error) {
+        res.status(500).json({ message: `Unable to retrieve inventories: ${error.message}` });
+    }
+};
  
-export {warehouseList, warehouseSingle,warehouseEdit,warehouseCreate, warehouseDelete}
+export {warehouseList, warehouseSingle,warehouseEdit,warehouseCreate, warehouseDelete,inventoryByWarehouse}
