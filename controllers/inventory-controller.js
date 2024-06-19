@@ -140,8 +140,18 @@ const inventoryEdit = async (req, res) => {
     }
 };
 const inventoryDelete = async (req,res) => {
-    
-}
+    const inventoryId=req.params.id;
+    try {
+        const rowsDeleted = await knex('inventories').where({ id: inventoryId }).del();
+        if (rowsDeleted === 0) {
+            return res.status(404).json({ message: `Inventory with ID ${inventoryId} not found` });
+        }
+        await knex('inventories').where({ id: inventoryId }).del();
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ message: `Unable to delete : ${error.message}` });
+    }
+};
 
 
 export {inventoryList,inventorySingle,inventoryCreate,inventoryEdit,inventoryDelete}
