@@ -2,6 +2,13 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
+//  Validation Variables 
+const isNonEmptyString = (value) => typeof value === 'string' && value.trim().length > 0;
+
+const isValidNumber = (value) => {
+    return !isNaN(value) && Number.isInteger(Number(value));
+};
+
 // GET All
 const inventoryList = async (_req, res) => {
     try {
@@ -52,9 +59,45 @@ const inventorySingle = async (req, res) => {
     }
 };
 
-const inventoryCreate = async (req,res) => {
+// Create Inventory Item
+const inventoryCreate = async (req, res) => {
+    const { warehouse_id, item_name, description, category, status, quantity } = req.body;
 
-}
+    if (
+        !isValidNumber(warehouse_id) ||
+        !isNonEmptyString(item_name) ||
+        !isNonEmptyString(description) ||
+        !isNonEmptyString(category) ||
+        !isNonEmptyString(status) ||
+        !isValidNumber(quantity)
+    ) {
+        return res.status(400).json({ message: 'Invalid input. All fields are required and must be correctly formatted.' });
+    }
+
+    try {
+        const warehouse = await knex('warehouses').where({ id: warehouse_id }).first();
+        if (!warehouse) {
+            return res.status(400).json({ message: 'Invalid warehouse_id. Warehouse does not exist.' });
+        }
+
+        const [newInventoryItemId] = await knex('inventories').insert({
+            warehouse_id,
+            item_name,
+            description,
+            category,
+            status,
+            quantity
+        }).returning('id');
+
+        const newInventoryItem = await knex('inventories').where({ id: newInventoryItemId }).first();
+
+        res.status(201).json(newInventoryItem);
+    } catch (error) {
+        res.status(500).json({ message: `Unable to create inventory item: ${error.message}` });
+    }
+};
+
+
 const inventoryEdit = async (req,res) => {
     
 }
