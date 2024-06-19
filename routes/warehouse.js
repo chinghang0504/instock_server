@@ -6,11 +6,11 @@ const router = express.Router();
 router.route("/")
     .get(warehouseController.warehouseList)
     .post(warehouseController.warehouseCreate)
-    .put(warehouseController.warehouseEdit);
 
 router.route("/:id")
     .get(warehouseController.warehouseSingle)
     .delete(warehouseController.warehouseDelete)
+    .put(warehouseController.warehouseEdit);
 
 router.route("/:id/inventories")
     .get(warehouseController.inventoryByWarehouse);
