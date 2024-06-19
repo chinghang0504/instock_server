@@ -16,6 +16,8 @@ const isValidEmail = (email) => {
     return regex.test(email);
 };
 
+
+// GET All 
 const warehouseList = async (_req, res) => {
     try{
         const data= await knex("warehouses");
@@ -25,7 +27,7 @@ const warehouseList = async (_req, res) => {
     }
 };
 
-
+// GET Single
 const warehouseSingle = async (req, res) => {
     try {
         const warehouseData = await knex("warehouses").where({ id: req.params.id }).first();
@@ -39,8 +41,8 @@ const warehouseSingle = async (req, res) => {
         return res.status(500).json({ message: `Unable to retrieve data for warehouse with ID: ${req.params.id}` });
     }
 };
-// EDIT Warehouse
 
+// EDIT Warehouse
 const warehouseEdit = async (req, res) => {
     const warehouseId = req.params.id;
     const { warehouse_name, address, city, country, contact_name, contact_position, contact_phone, contact_email } = req.body;
@@ -79,5 +81,43 @@ const warehouseEdit = async (req, res) => {
       res.status(500).json({ message: `Unable to update warehouse: ${error.message}` });
     }
   };
+
+  // POST Single
+const warehouseCreate = async (req, res) => {
+    const { warehouse_name, address, city, country, contact_name, contact_position, contact_phone, contact_email } = req.body;
+
+    if (
+        !isNonEmptyString(warehouse_name) ||
+        !isNonEmptyString(address) ||
+        !isNonEmptyString(city) ||
+        !isNonEmptyString(country) ||
+        !isNonEmptyString(contact_name) ||
+        !isNonEmptyString(contact_position) ||
+        !isValidPhoneNumber(contact_phone) ||
+        !isValidEmail(contact_email)
+    ) {
+        return res.status(400).json({ message: 'Invalid input. All fields are required and must be correctly formatted.' });
+    }
+    try {
+        const [newWarehouseId] = await knex('warehouses').insert({
+            warehouse_name,
+            address,
+            city,
+            country,
+            contact_name,
+            contact_position,
+            contact_phone,
+            contact_email
+        });
+
+        const newWarehouse = await knex('warehouses').where({ id: newWarehouseId }).first();
+
+        res.status(201).json(newWarehouse);
+    } catch (error) {
+        res.status(500).json({ message: `Unable to create warehouse: ${error.message}` });
+    }
+};
  
-export {warehouseList, warehouseSingle,warehouseEdit}
+
+ 
+export {warehouseList, warehouseSingle,warehouseEdit,warehouseCreate}
