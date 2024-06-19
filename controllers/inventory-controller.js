@@ -139,6 +139,8 @@ const inventoryEdit = async (req, res) => {
         res.status(500).json({ message: `Unable to update inventory item: ${error.message}` });
     }
 };
+
+// Delete Inventory Item
 const inventoryDelete = async (req,res) => {
     const inventoryId=req.params.id;
     try {

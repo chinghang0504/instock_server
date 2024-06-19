@@ -82,7 +82,7 @@ const warehouseEdit = async (req, res) => {
     }
   };
 
-  // POST Single
+  // CREATE Warehouse
 const warehouseCreate = async (req, res) => {
     const { warehouse_name, address, city, country, contact_name, contact_position, contact_phone, contact_email } = req.body;
 
@@ -118,7 +118,7 @@ const warehouseCreate = async (req, res) => {
     }
 };
 
-// DELETE warehouse
+// DELETE Warehouse
 const warehouseDelete = async (req, res) => {
     const warehouseId = req.params.id;
     try {
