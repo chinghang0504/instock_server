@@ -26,6 +26,8 @@ const warehouseSingle = async (req, res) => {
     }
 };
 
-
+const warehouseEdit = async (req, res) => {
+    
+};
  
-export {warehouseList, warehouseSingle}
+export {warehouseList, warehouseSingle,warehouseEdit}
