@@ -31,9 +31,12 @@ const warehouseSingle = async (req, res) => {
 const isNonEmptyString = (value) => typeof value === 'string' && value.trim().length > 0;
 
 const isValidPhoneNumber = (phone) => {
-    const regex = /^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d+$/;
-    return regex.test(phone);
+    const regex = /^(\+\d{1,3}\s?)?(\(\d{3}\)|\d{3})[\s.-]?\d{3}[\s.-]?\d{4}$/;
+    const regexWithoutCountryCode = /^(\(\d{3}\)|\d{3})[\s.-]?\d{3}[\s.-]?\d{4}$/;
+    return regex.test(phone) || regexWithoutCountryCode.test(phone);
 };
+
+
 const isValidEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -64,7 +67,7 @@ const warehouseCreate = async (req, res) => {
             contact_position,
             contact_phone,
             contact_email
-        }).returning('id');
+        });
 
         const newWarehouse = await knex('warehouses').where({ id: newWarehouseId }).first();
 

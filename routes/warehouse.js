@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.route("/")
 .get(warehouseController.warehouseList)
-.post(warehouseController.warehouseList);
+.post(warehouseController.warehouseCreate);
 
 router.route("/:id").get(warehouseController.warehouseSingle);
 
