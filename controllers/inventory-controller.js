@@ -155,5 +155,20 @@ const inventoryDelete = async (req,res) => {
     }
 };
 
+//GET Inventory Search
+const inventorySearch = async (req, res) => {
+    const searchTerm = formatSearchTerm(req.query.s);
+    try {
+        const filteredInventories = await knex('inventories')
+            .where('item_name', 'like', searchTerm)
+            .orwhere('warehouse_name', 'like', searchTerm)
+            .orWhere('category', 'like', searchTerm)
+            .orWhere('description', 'like', searchTerm);
+            
+        res.status(200).json(filteredInventories);
+    } catch (error) {
+        res.status(400).send(`Error retrieving warehouse list: ${error}`);
+    }
+};
 
-export {inventoryList,inventorySingle,inventoryCreate,inventoryEdit,inventoryDelete}
+export {inventoryList,inventorySingle,inventoryCreate,inventoryEdit,inventoryDelete,inventorySearch}
