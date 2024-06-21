@@ -159,20 +159,23 @@ const inventoryDelete = async (req,res) => {
     }
 };
 
-//GET Inventory Search
 const inventorySearch = async (req, res) => {
     const searchTerm = formatSearchTerm(req.query.s);
     try {
+        console.log(searchTerm);
         const filteredInventories = await knex('inventories')
+            .join('warehouses', 'inventories.warehouse_id', 'warehouses.id')
+            .select('inventories.*', 'warehouses.warehouse_name')
             .where('item_name', 'like', searchTerm)
-            .orwhere('warehouse_name', 'like', searchTerm)
+            .orWhere('warehouses.warehouse_name', 'like', searchTerm)
             .orWhere('category', 'like', searchTerm)
             .orWhere('description', 'like', searchTerm);
-            
+
         res.status(200).json(filteredInventories);
     } catch (error) {
-        res.status(400).send(`Error retrieving warehouse list: ${error}`);
+        res.status(400).send(`Error retrieving inventory list: ${error}`);
     }
 };
+
 
 export {inventoryList,inventorySingle,inventoryCreate,inventoryEdit,inventoryDelete,inventorySearch}
