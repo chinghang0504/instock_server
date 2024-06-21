@@ -9,6 +9,10 @@ const isValidNumber = (value) => {
     return !isNaN(value) && Number.isInteger(Number(value));
 };
 
+const formatSearchTerm = (term) => {
+    return typeof term === 'string' ? `%${term.toLowerCase()}%` : '%';
+};
+
 // GET All
 const inventoryList = async (_req, res) => {
     try {
