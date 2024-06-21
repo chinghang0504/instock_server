@@ -156,8 +156,8 @@ const inventoryByWarehouse = async (req, res) =>{
 //GET Warehouse Search
 const warehouseSearch = async (req, res) => {
     const searchTerm = formatSearchTerm(req.query.s);
-
     try {
+        console.log(searchTerm)
         const filteredWarehouses = await knex('warehouses')
             .where('warehouse_name', 'like', searchTerm)
             .orWhere('address', 'like', searchTerm)

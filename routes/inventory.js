@@ -3,6 +3,9 @@ import * as inventoryController from "../controllers/inventory-controller.js";
 
 const router = express.Router();
 
+router.route("/search")
+    .get(inventoryController.inventorySearch)
+
 router.route("/")
     .get(inventoryController.inventoryList)
     .post(inventoryController.inventoryCreate);
