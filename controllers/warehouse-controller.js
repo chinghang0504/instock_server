@@ -16,6 +16,10 @@ const isValidEmail = (email) => {
     return regex.test(email);
 };
 
+const formatSearchTerm = (term) => {
+    return typeof term === 'string' ? `%${term.toLowerCase()}%` : '%';
+};
+
 // GET All 
 const warehouseList = async (_req, res) => {
     try{
@@ -151,24 +155,24 @@ const inventoryByWarehouse = async (req, res) =>{
  
 //GET Warehouse Search
 const warehouseSearch = async (req, res) => {
-    console.log('req.query.s:', req.query.s); 
-    const searchTerm = req.query.s ? `%${req.query.s.toLowerCase()}%` : '%';
+    const searchTerm = formatSearchTerm(req.query.s);
 
     try {
         const filteredWarehouses = await knex('warehouses')
-        .where('warehouse_name', 'like', searchTerm)
-        .orWhere('address', 'like', searchTerm)
-        .orWhere('city', 'like', searchTerm)
-        .orWhere('country', 'like', searchTerm)
-        .orWhere('contact_name', 'like', searchTerm)
-        .orWhere('contact_phone', 'like', searchTerm);
-    
+            .where('warehouse_name', 'like', searchTerm)
+            .orWhere('address', 'like', searchTerm)
+            .orWhere('city', 'like', searchTerm)
+            .orWhere('country', 'like', searchTerm)
+            .orWhere('contact_name', 'like', searchTerm)
+            .orWhere('contact_phone', 'like', searchTerm);
 
         res.status(200).json(filteredWarehouses);
     } catch (error) {
         res.status(400).send(`Error retrieving warehouse list: ${error}`);
     }
 };
+
+
 
 
 
