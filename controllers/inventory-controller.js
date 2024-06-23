@@ -14,7 +14,43 @@ const formatSearchTerm = (term) => {
 };
 
 // GET All
-const inventoryList = async (_req, res) => {
+const inventoryList = async (req, res) => {
+    let sortBy = req.query.sort_by;
+    let orderBy = req.query.order_by;
+
+    // No sorting
+    if (!sortBy) {
+        try {
+            const data = await knex("inventories")
+                .join("warehouses", "inventories.warehouse_id", "warehouses.id")
+                .select(
+                    "inventories.id",
+                    "inventories.warehouse_id",
+                    "warehouses.warehouse_name",
+                    "inventories.item_name",
+                    "inventories.description",
+                    "inventories.category",
+                    "inventories.status",
+                    "inventories.quantity"
+                );
+            return res.status(200).json(data);
+        } catch (error) {
+            return res.status(400).send(`Error retrieving inventory list: ${error}`);
+        }
+    }
+
+    // Valid column names and orders
+    const validColumns = ['item_name', 'category', 'status', 'quantity', 'warehouse_name'];
+    const validOrders = ['asc', 'desc'];
+
+    // Set the value to defaul if the value is invalid
+    if (!sortBy || !validColumns.includes(sortBy)) {
+        sortBy = 'item_name';
+    }
+    if (!orderBy || !validOrders.includes(orderBy)) {
+        orderBy = 'asc';
+    }
+
     try {
         const data = await knex("inventories")
             .join("warehouses", "inventories.warehouse_id", "warehouses.id")
@@ -27,11 +63,11 @@ const inventoryList = async (_req, res) => {
                 "inventories.category",
                 "inventories.status",
                 "inventories.quantity"
-            );
-
-        res.status(200).json(data);
+            )
+            .orderBy(sortBy, orderBy);
+        return res.status(200).json(data);
     } catch (error) {
-        res.status(400).send(`Error retrieving inventory list: ${error}`);
+        return res.status(400).send(`Error retrieving inventory list: ${error}`);
     }
 };
 
