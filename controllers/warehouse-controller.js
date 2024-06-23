@@ -21,12 +21,37 @@ const formatSearchTerm = (term) => {
 };
 
 // GET All 
-const warehouseList = async (_req, res) => {
+const warehouseList = async (req, res) => {
+    let sortBy = req.query.sort_by;
+    let orderBy = req.query.order_by;
+    
+    // No sorting
+    if (!sortBy) {
+        try{
+            const data = await knex("warehouses");
+            return res.status(200).json(data)
+        } catch (error) {
+            return res.status(400).send (`Error retriving warehouse list:${error}`);
+        }
+    }
+
+    // Valid column names and orders
+    const validColumns = ['warehouse_name', 'address', 'contact_name', 'contact_phone'];
+    const validOrders = ['asc', 'desc'];
+
+    // Set the value to defaul if the value is invalid
+    if (!sortBy || !validColumns.includes(sortBy)) {
+        sortBy = 'warehouse_name';
+    }
+    if (!orderBy || !validOrders.includes(orderBy)) {
+        orderBy = 'asc';
+    }
+
     try{
-        const data= await knex("warehouses");
-        res.status(200).json(data)
+        const data = await knex("warehouses").orderBy(sortBy, orderBy);
+        return res.status(200).json(data)
     } catch (error) {
-        res.status(400).send (`Error retriving warehouse list:${error}`);
+        return res.status(400).send (`Error retriving warehouse list:${error}`);
     }
 };
 
