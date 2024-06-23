@@ -200,7 +200,7 @@ const inventoryByWarehouse = async (req, res) =>{
             return res.status(404).json({ message: `Warehouse with ID ${warehouseId} not found` });
         }
 
-        const inventories = await knex('inventories').where({ warehouse_id: warehouseId }).select('id', 'item_name', 'category', 'status', 'quantity').orderBy(sortBy, orderBy);;
+        const inventories = await knex('inventories').where({ warehouse_id: warehouseId }).select('id', 'item_name', 'category', 'status', 'quantity').orderBy(sortBy, orderBy);
         return res.status(200).json(inventories);
     } catch (error) {
         return res.status(500).json({ message: `Unable to retrieve inventories: ${error.message}` });
