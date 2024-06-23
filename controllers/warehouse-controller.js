@@ -164,14 +164,43 @@ const warehouseDelete = async (req, res) => {
 // GET Inventory By Warehouse
 const inventoryByWarehouse = async (req, res) =>{
     const warehouseId = req.params.id;
+    let sortBy = req.query.sort_by;
+    let orderBy = req.query.order_by;
 
+    // No sorting
+    if (!sortBy) {
+        try {
+            const warehouseExists = await knex('warehouses').where({ id: warehouseId }).first();
+            if (!warehouseExists) {
+                return res.status(404).json({ message: `Warehouse with ID ${warehouseId} not found` });
+            }
+
+            const inventories = await knex('inventories').where({ warehouse_id: warehouseId }).select('id', 'item_name', 'category', 'status', 'quantity');
+            res.status(200).json(inventories);
+        } catch (error) {
+            res.status(500).json({ message: `Unable to retrieve inventories: ${error.message}` });
+        }
+    }
+
+    // Valid column names and orders
+    const validColumns = ['item_name', 'category', 'status', 'quantity'];
+    const validOrders = ['asc', 'desc'];
+
+    // Set the value to defaul if the value is invalid
+    if (!sortBy || !validColumns.includes(sortBy)) {
+        sortBy = 'item_name';
+    }
+    if (!orderBy || !validOrders.includes(orderBy)) {
+        orderBy = 'asc';
+    }
+    
     try {
         const warehouseExists = await knex('warehouses').where({ id: warehouseId }).first();
         if (!warehouseExists) {
             return res.status(404).json({ message: `Warehouse with ID ${warehouseId} not found` });
         }
 
-        const inventories = await knex('inventories').where({ warehouse_id: warehouseId }).select('id', 'item_name', 'category', 'status', 'quantity');
+        const inventories = await knex('inventories').where({ warehouse_id: warehouseId }).select('id', 'item_name', 'category', 'status', 'quantity').orderBy(sortBy, orderBy);
         res.status(200).json(inventories);
     } catch (error) {
         res.status(500).json({ message: `Unable to retrieve inventories: ${error.message}` });
