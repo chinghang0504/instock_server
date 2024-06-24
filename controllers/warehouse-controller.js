@@ -83,12 +83,12 @@ const warehouseEdit = async (req, res) => {
     if (!warehouse_name || !address || !city || !country || !contact_name || !contact_position || !contact_phone || !contact_email) {
       return res.status(400).json({ message: 'Invalid input. All fields are required and must be correctly formatted.' });
     }
-    if (!isValidPhoneNumber(contact_phone)) {
-      return res.status(400).json({ message: 'Invalid phone number format' });
-    }
-    if (!isValidEmail(contact_email)) {
-      return res.status(400).json({ message: 'Invalid email format' });
-    }
+    // if (!isValidPhoneNumber(contact_phone)) {
+    //   return res.status(400).json({ message: 'Invalid phone number format' });
+    // }
+    // if (!isValidEmail(contact_email)) {
+    //   return res.status(400).json({ message: 'Invalid email format' });
+    // }
   
     try {
     
@@ -121,8 +121,10 @@ const warehouseCreate = async (req, res) => {
         !isNonEmptyString(country) ||
         !isNonEmptyString(contact_name) ||
         !isNonEmptyString(contact_position) ||
-        !isValidPhoneNumber(contact_phone) ||
-        !isValidEmail(contact_email)
+        !isNonEmptyString(contact_phone) ||
+        !isNonEmptyString(contact_email)
+        // !isValidPhoneNumber(contact_phone) ||
+        // !isValidEmail(contact_email)
     ) {
         return res.status(400).json({ message: 'Invalid input. All fields are required and must be correctly formatted.' });
     }
